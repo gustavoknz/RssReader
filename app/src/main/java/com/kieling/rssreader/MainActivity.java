@@ -23,39 +23,40 @@ import android.widget.TextView;
 
 import com.kieling.rssreader.model.RssMenu;
 import com.kieling.rssreader.rss.RssListAdapter;
-import com.kieling.rssreader.service.RssService;
+import com.kieling.rssreader.service.DataFetcher;
+import com.kieling.rssreader.service.RestService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
-import rx.Observable;
-import rx.Observer;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DataFetcher {
     private static final String TAG = "MainActivity";
     private static final List<RssMenu> rssList = new ArrayList<>();
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
     @BindView(R.id.fab)
     FloatingActionButton fab;
+
     @BindView(R.id.drawerLayout)
     DrawerLayout drawer;
+
     @BindView(R.id.navView)
     NavigationView navigationView;
+
     @BindView(R.id.urlText)
     EditText urlText;
+
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+
     @BindView(R.id.rssRecyclerView)
     RecyclerView rssRecyclerView;
+
     private TextView mainDrawerRegisteredFeeds;
 
     @Override
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        urlText.setText("xkcd.com/rss.xml");
+        urlText.setText(R.string.main_url_default);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -77,18 +78,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         RssListAdapter rssListAdapter = new RssListAdapter(getApplicationContext(), rssList);
         rssRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         rssRecyclerView.setAdapter(rssListAdapter);
-
-        /*rssRecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(MainActivity.this, rssRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
-                        // do whatever
-                    }
-
-                    @Override public void onLongItemClick(View view, int position) {
-                        // do whatever
-                    }
-                })
-        );*/
     }
 
     @Override
@@ -124,15 +113,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view items clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        }
-
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -161,52 +141,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void fetchData(String url) {
-        //URL must start with http:// or https://
-        String baseUrl = url.startsWith("http://") || url.startsWith("https://") ? url : "http://".concat(url);
+        RestService.fetchData(this, url);
+    }
 
-        //URL must not end with /
-        baseUrl = baseUrl.endsWith("/") ? baseUrl.substring(0, baseUrl.length() - 1) : baseUrl;
+    @Override
+    public void onComplete(RssMenu data) {
+        progressBar.setVisibility(View.INVISIBLE);
+        if (!rssList.contains(data)) {
+            rssList.add(data);
+        }
+        mainDrawerRegisteredFeeds.setText(getString(R.string.main_drawer_registered_rss, rssList.size()));
+        rssRecyclerView.getAdapter().notifyDataSetChanged();
+    }
 
-        //Get root URL
-        String rootUrl = baseUrl.substring(0, baseUrl.lastIndexOf('/') + 1);
-
-        String suffix = baseUrl.substring(baseUrl.lastIndexOf('/') + 1, baseUrl.length());
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(SimpleXmlConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .baseUrl(rootUrl)
-                .build();
-
-        RssService rssService = retrofit.create(RssService.class);
-        Observable<RssMenu> feed = rssService.getRssData(suffix);
-
-        Log.i(TAG, String.format("Fetching data from %s%s", rootUrl, suffix));
-        Subscription subscription = feed.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<RssMenu>() {
-                    @Override
-                    public void onCompleted() {
-                        Log.i(TAG, "Complete! :D");
-                        progressBar.setVisibility(View.INVISIBLE);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.i(TAG, "ERROR /o\\", e);
-                        progressBar.setVisibility(View.INVISIBLE);
-                    }
-
-                    @Override
-                    public void onNext(RssMenu rssMenu) {
-                        Log.i(TAG, "Received title: " + rssMenu.getTitle());
-
-                        if (!rssList.contains(rssMenu)) {
-                            rssList.add(rssMenu);
-                        }
-                        mainDrawerRegisteredFeeds.setText(getString(R.string.main_drawer_registered_rss, rssList.size()));
-                        rssRecyclerView.getAdapter().notifyDataSetChanged();
-                    }
-                });
-        Log.d(TAG, "is Unsubscribed? " + subscription.isUnsubscribed());
+    @Override
+    public void onError(Throwable throwable) {
+        Log.e(TAG, "ERROR /o\\", throwable);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 }

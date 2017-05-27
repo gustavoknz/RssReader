@@ -18,12 +18,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.FeedModelViewHolder> {
+class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.FeedModelViewHolder> {
     private static final String TAG = "FeedListAdapter";
     private Context mContext;
     private List<FeedItem> mRssList;
 
-    public FeedListAdapter(Context context, List<FeedItem> rssList) {
+    FeedListAdapter(Context context, List<FeedItem> rssList) {
         mContext = context;
         mRssList = rssList;
     }

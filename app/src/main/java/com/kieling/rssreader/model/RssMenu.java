@@ -10,6 +10,7 @@ import java.util.List;
 
 @Root(strict = false)
 public class RssMenu implements Serializable {
+    private String rootUrl;
 
     @Path("channel")
     @Element(name = "title")
@@ -30,6 +31,14 @@ public class RssMenu implements Serializable {
     @Path("channel")
     @ElementList(inline = true)
     private List<FeedItem> list;
+
+    public String getRootUrl() {
+        return rootUrl;
+    }
+
+    public void setRootUrl(String rootUrl) {
+        this.rootUrl = rootUrl;
+    }
 
     public String getTitle() {
         return title;
@@ -89,7 +98,8 @@ public class RssMenu implements Serializable {
     @Override
     public String toString() {
         return "RssMenu{" +
-                "title='" + title + '\'' +
+                "rootUrl='" + rootUrl + '\'' +
+                ", title='" + title + '\'' +
                 ", link='" + link + '\'' +
                 ", description='" + description + '\'' +
                 ", language='" + language + '\'' +
