@@ -11,7 +11,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_alignParentTop="true"
-        app:layout_heightPercent="65%">
+        app:layout_heightPercent="80%">
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -32,29 +32,45 @@
             android:layout_marginBottom="30dp">
 
             <TextView
-                android:id="@+id/prefixUrlText"
+                android:id="@+id/mainInitMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20dp"
-                android:layout_marginStart="20dp"
-                android:text="http://"
+                android:layout_centerHorizontal="true"
+                android:text="@string/main_init_message"
                 android:textColor="#111111"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="22sp" />
 
-            <EditText
-                android:id="@+id/urlText"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_toEndOf="@id/prefixUrlText"
-                android:layout_toRightOf="@id/prefixUrlText"
-                android:hint="URL"
-                android:inputType="textUri" />
+                android:layout_below="@id/mainInitMessage"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/prefixUrlText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/main_url_prefix"
+                    android:textColor="#111111"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/urlText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginStart="5dp"
+                    android:hint="@string/main_url_hint"
+                    android:inputType="textUri" />
+            </LinearLayout>
         </RelativeLayout>
+
 
         <Button
             style="@style/Base.TextAppearance.AppCompat.Button"
@@ -63,11 +79,11 @@
             android:layout_below="@id/middleLayout"
             android:layout_centerHorizontal="true"
             android:onClick="fetchDataClicked"
-            android:text="Fetch" />
+            android:text="@string/main_button_fetch_text" />
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
-        app:layout_heightPercent="35%" />
+        app:layout_heightPercent="20%" />
 </android.support.percent.PercentRelativeLayout>

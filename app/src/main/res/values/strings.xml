@@ -15,4 +15,8 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="image_desc">item on screen</string>
+    <string name="main_init_message">Enter URL rss to be fetched</string>
+    <string name="main_url_prefix">http://</string>
+    <string name="main_url_hint">URL</string>
+    <string name="main_button_fetch_text">Fetch</string>
 </resources>
