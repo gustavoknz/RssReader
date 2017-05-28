@@ -52,7 +52,6 @@
             android:layout_centerVertical="true"
             android:layout_gravity="end"
             android:contentDescription="@string/feeds_item_thumbnail_desc"
-            android:padding="5dp"
-            android:src="@drawable/ic_menu_camera" />
+            android:padding="5dp" />
     </android.support.v7.widget.CardView>
 </LinearLayout>

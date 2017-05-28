@@ -1,6 +1,7 @@
 package com.kieling.rssreader.feed;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,7 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kieling.rssreader.R;
+import com.kieling.rssreader.image.ImageActivity;
 import com.kieling.rssreader.model.FeedItem;
+import com.kieling.rssreader.util.Utils;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -20,8 +23,8 @@ import butterknife.ButterKnife;
 
 class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.FeedModelViewHolder> {
     private static final String TAG = "FeedListAdapter";
+    private static List<FeedItem> mRssList;
     private Context mContext;
-    private List<FeedItem> mRssList;
 
     FeedListAdapter(Context context, List<FeedItem> rssList) {
         mContext = context;
@@ -31,7 +34,7 @@ class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.FeedModelView
     @Override
     public FeedModelViewHolder onCreateViewHolder(ViewGroup parent, int type) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_feed, parent, false);
-        return new FeedModelViewHolder(v);
+        return new FeedModelViewHolder(v, mContext);
     }
 
     @Override
@@ -40,9 +43,7 @@ class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.FeedModelView
         holder.feedItemDateText.setText(feed.getPubDate());
         holder.feedItemTitleText.setText(feed.getTitle());
         Log.d(TAG, "img: " + feed.getDescription());
-        String src = "<img src=\"";
-        int index = feed.getDescription().indexOf(src) + src.length();
-        String url = feed.getDescription().substring(index, feed.getDescription().indexOf("\"", index + 1));
+        String url = parseUrl(feed.getDescription());
         Picasso.with(mContext)
                 .load(url)
                 //.placeholder(R.drawable.user_placeholder)
@@ -55,7 +56,9 @@ class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.FeedModelView
         return mRssList.size();
     }
 
-    static class FeedModelViewHolder extends RecyclerView.ViewHolder {
+    static class FeedModelViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private Context mContext;
+
         @BindView(R.id.feedItemDateText)
         TextView feedItemDateText;
 
@@ -65,9 +68,24 @@ class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.FeedModelView
         @BindView(R.id.feedItemThumbnail)
         ImageView feedItemThumbnail;
 
-        FeedModelViewHolder(View v) {
+        FeedModelViewHolder(View v, Context context) {
             super(v);
             ButterKnife.bind(this, v);
+            v.setOnClickListener(this);
+            mContext = context;
         }
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(mContext, ImageActivity.class);
+            intent.putExtra(Utils.IMAGE_INTENT_KEY, parseUrl(mRssList.get(getAdapterPosition()).getDescription()));
+            mContext.startActivity(intent);
+        }
+    }
+
+    private static String parseUrl(String str) {
+        String src = "<img src=\"";
+        int index = str.indexOf(src) + src.length();
+        return str.substring(index, str.indexOf("\"", index + 1));
     }
 }

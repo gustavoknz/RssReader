@@ -22,7 +22,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".feed.FeedListActivity"></activity>
+        <activity android:name=".feed.FeedListActivity" />
+        <activity
+            android:name=".image.ImageActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_image"
+            android:parentActivityName=".feed.FeedListActivity"
+            android:theme="@style/FullscreenTheme" />
     </application>
 
 </manifest>
