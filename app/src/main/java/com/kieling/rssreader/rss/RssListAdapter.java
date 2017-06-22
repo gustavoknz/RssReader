@@ -64,9 +64,8 @@ public class RssListAdapter extends RecyclerView.Adapter<RssListAdapter.FeedMode
             RssMenu rss = mRssList.get(getAdapterPosition());
             Log.d(TAG, "rss clicked: " + rss);
 
-            Intent intent = new Intent(mContext, FeedListActivity.class);
-            intent.putExtra(Utils.RSS_INTENT_KEY, rss);
-            mContext.startActivity(intent);
+            Utils.writeObjectToSharedPreferences(mContext, Utils.RSS_PARAMETER_KEY, rss);
+            mContext.startActivity(new Intent(mContext, FeedListActivity.class));
         }
     }
 }

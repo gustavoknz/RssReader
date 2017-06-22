@@ -77,9 +77,8 @@ class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.FeedModelView
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(mContext, ImageActivity.class);
-            intent.putExtra(Utils.IMAGE_INTENT_KEY, parseUrl(mRssList.get(getAdapterPosition()).getDescription()));
-            mContext.startActivity(intent);
+            Utils.writeStringToSharedPreferences(mContext, Utils.IMAGE_PARAMETER_KEY, parseUrl(mRssList.get(getAdapterPosition()).getDescription()));
+            mContext.startActivity(new Intent(mContext, ImageActivity.class));
         }
     }
 

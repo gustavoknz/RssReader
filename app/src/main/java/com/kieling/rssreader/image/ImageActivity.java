@@ -21,7 +21,7 @@ public class ImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image);
         ButterKnife.bind(this);
 
-        String url = getIntent().getStringExtra(Utils.IMAGE_INTENT_KEY);
+        String url = Utils.readStringFromSharedPreferences(getApplicationContext(), Utils.IMAGE_PARAMETER_KEY);
         Picasso.with(this).load(url).into(imageFeed);
     }
 }

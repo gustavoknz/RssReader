@@ -7,5 +7,4 @@
     <dimen name="nav_body_spacing_end">5dp</dimen>
     <dimen name="nav_body_spacing_start">10dp</dimen>
     <dimen name="nav_body_spacing_top">120dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
 </resources>

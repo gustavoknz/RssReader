@@ -36,7 +36,8 @@ public class FeedListActivity extends AppCompatActivity implements DataFetcher {
         setContentView(R.layout.activity_feed_list);
         ButterKnife.bind(this);
 
-        RssMenu rss = (RssMenu) getIntent().getSerializableExtra(Utils.RSS_INTENT_KEY);
+        RssMenu rss = (RssMenu) Utils.readObjectFromSharedPreferences(getApplicationContext(), Utils.RSS_PARAMETER_KEY, RssMenu.class);
+
         Log.d(TAG, "Showing RSS for " + rss);
         feedList = rss.getList();
         FeedListAdapter feedListAdapter = new FeedListAdapter(this, feedList);

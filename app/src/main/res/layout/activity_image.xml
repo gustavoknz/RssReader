@@ -2,14 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
-    tools:context="com.kieling.rssreader.image.ImageActivity">
+    tools:context=".image.ImageActivity">
 
     <ImageView
         android:id="@+id/imageFeed"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffffff"
+        android:background="#000000"
         android:contentDescription="@string/image_desc"
         android:gravity="center"
         android:keepScreenOn="true" />
