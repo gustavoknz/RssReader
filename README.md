@@ -1,2 +1,2 @@
 # RssReader
-A simple RSS reader
+A simple RSS reader for xkcd.com
